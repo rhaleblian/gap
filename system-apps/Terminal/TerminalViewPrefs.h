@@ -28,6 +28,7 @@ extern NSString *TerminalViewDisplayPrefsDidChangeNotification;
 	NSTextField *f_scrollBackLines;
 	NSButton *b_useMultiCellGlyphs;
 	NSButton *b_blackOnWhite;
+	NSButton *b_monochrome;
 
 	NSTextField *f_cur;
 }
@@ -37,6 +38,7 @@ extern NSString *TerminalViewDisplayPrefsDidChangeNotification;
 
 +(BOOL) useMultiCellGlyphs;
 +(BOOL) blackOnWhite;
++(BOOL) monochrome;
 
 +(const float *) brightnessForIntensities;
 +(const float *) saturationForIntensities;

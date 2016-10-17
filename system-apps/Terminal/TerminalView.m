@@ -392,64 +392,55 @@ TerminalScreen protocol implementation and rendering methods
 static int total_draw=0;
 
 
-static const float col_h[8]={  0,240,120,180,  0,300, 60,  0};
-static const float col_s[8]={0.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0};
+static const float col_default_h[8]={  0,240,120,180,  0,300, 60,  0};
+static const float col_default_s[8]={0.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0};
+static const float col_default_b[8]={0.0,0.8,0.8,0.8,0.8,0.8,0.8,0.8};
+static const float col_inverse_h[8]={  0,240,120,180,  0,300, 60,  0};
+static const float col_inverse_s[8]={0.0,0.8,0.8,0.8,0.8,0.8,0.8,0.0};
+static const float col_inverse_b[8]={1.0,0.3,0.3,0.3,0.3,0.3,0.3,0.2};
+static const float col_monochr_s[8]={0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+const float *col_h = col_default_h;
+const float *col_s = col_default_s;
+const float *col_b = col_default_b;
 
 static void set_background(NSGraphicsContext *gc,
 	unsigned char color,unsigned char in)
 {
-	float bh,bs,bb;
-	int bg=color>>4;
+	float bh,bs,bb=0.75;
 
-	if (bg==0)
-		bb=0.0;
-	else if (bg>=8)
-		bg-=8,bb=1.0;
-	else
-		bb=0.6;
-	bs=col_s[bg];
+	int bg=color>>4;
+	if (bg>=8)
+		bg-=8;
+
 	bh=col_h[bg]/360.0;
+	bs=col_s[bg];
 
 	DPSsethsbcolor(gc,bh,bs,bb);
 }
 
 static void set_foreground(NSGraphicsContext *gc,
-	unsigned char color,unsigned char in, BOOL blackOnWhite)
+	unsigned char color, unsigned char in, BOOL blackOnWhite)
 {
-	int fg=color;
+	//NSLog(@"in=%d", in);
+
 	float h,s,b;
+	int fg=color;
 
-if (blackOnWhite)
-  {
-    if (color == 0) { fg = 7; in = 2; }		// Black becomes white
-    else if (color == 7) { fg = 0; in = 0; }	// White becomes black
-    //else in = 3;				// Other colors are saturated
-  }
-
-	if (fg>=8)
-	{
-		in++;
-		fg-=8;
-	}
-
-	if (fg==0)
-	{
-		if (in==2)
-			b=0.4;
-		else
-			b=0.0;
-	}
-	else if (in==0)
-		b=0.6;
-	else if (in==1)
-		b=0.8;
-	else
-		b=1.0;
+	// Hue
 
 	h=col_h[fg]/360.0;
+
+	// Saturation
+
 	s=col_s[fg];
-	if (in==2)
-		s*=0.75;
+	//if(in==2)
+	//	s*=0.75;
+
+	// Brightness
+
+	b=col_b[fg];
+	if(fg)
+		b*=0.5*in+0.5;
 
 	DPSsethsbcolor(gc,h,s,b);
 }
@@ -473,13 +464,10 @@ if (blackOnWhite)
 	if (pending_scroll)
 		[self _handlePendingScroll: NO];
 
-	/* draw the border around the view if needed */
+	/* draw the border around the view if needed*/
 	{
 		float a,b;
-		if (blackOnWhite)
-			DPSsetgray(cur,1.0);
-		else
-			DPSsetgray(cur,0.0);
+		DPSsetgray(cur, col_b[0]);
 		if (r.origin.x<border_x)
 			DPSrectfill(cur,r.origin.x,r.origin.y,border_x-r.origin.x,r.size.height);
 		if (r.origin.y<border_y)
@@ -779,6 +767,25 @@ if (blackOnWhite)
 	NSDebugLLog(@"draw",@"total_draw=%i",total_draw);
 
 	draw_all=1;
+}
+
+-(void) initColorPalette
+{
+	if (blackOnWhite)
+	{
+		col_h = col_inverse_h;
+		col_s = col_inverse_s;
+		col_b = col_inverse_b;
+	}
+	else
+	{
+		col_h = col_default_h;
+		col_s = col_default_s;
+		col_b = col_default_b;
+	}
+
+	if (monochrome)
+		col_s = col_monochr_s;
 }
 
 -(BOOL) isOpaque
@@ -2306,6 +2313,8 @@ improve? */
 
 	use_multi_cell_glyphs=[TerminalViewDisplayPrefs useMultiCellGlyphs];
 	blackOnWhite=[TerminalViewDisplayPrefs blackOnWhite];
+	monochrome=[TerminalViewDisplayPrefs monochrome];
+	[self initColorPalette];
 
 	screen=malloc(sizeof(screen_char_t)*sx*sy);
 	memset(screen,0,sizeof(screen_char_t)*sx*sy);

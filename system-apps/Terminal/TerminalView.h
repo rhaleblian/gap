@@ -43,6 +43,7 @@ struct selection_range
 
 	BOOL use_multi_cell_glyphs;
 	BOOL blackOnWhite;
+	BOOL monochrome;
 
 	struct
 	{

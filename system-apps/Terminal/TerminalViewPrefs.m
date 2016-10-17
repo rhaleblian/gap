@@ -44,6 +44,7 @@ static NSString
 	*BoldTerminalFontSizeKey=@"BoldTerminalFontSize",
 	*UseMultiCellGlyphsKey=@"UseMultiCellGlyphs",
 	*BlackOnWhiteKey=@"BlackOnWhite",
+	*MonochromeKey=@"Monochrome",
 	*CursorStyleKey=@"CursorStyle",
 	*ScrollBackLinesKey=@"ScrollBackLines",
 
@@ -57,6 +58,7 @@ static NSFont *terminalFont,*boldTerminalFont;
 
 static BOOL useMultiCellGlyphs;
 static BOOL blackOnWhite;
+static BOOL monochrome;
 
 static float brightness[3]={0.6,0.8,1.0};
 static float saturation[3]={1.0,1.0,0.75};
@@ -104,6 +106,7 @@ static int scrollBackLines;
 
 		useMultiCellGlyphs=[ud boolForKey: UseMultiCellGlyphsKey];
 		blackOnWhite=[ud boolForKey: BlackOnWhiteKey];
+		monochrome=[ud boolForKey: MonochromeKey];
 
 		cursorStyle=[ud integerForKey: CursorStyleKey];
 		if ([ud objectForKey: CursorColorRKey])
@@ -155,6 +158,11 @@ static int scrollBackLines;
 	return blackOnWhite;
 }
 
++(BOOL) monochrome
+{
+	return monochrome;
+}
+
 +(const float *) brightnessForIntensities
 {
 	return brightness;
@@ -202,6 +210,10 @@ static int scrollBackLines;
 	      }
 	    [w_cursorColor setNeedsDisplay];
 	  }
+
+	[ud setBool: [b_monochrome state]
+	     forKey: MonochromeKey];
+	NSLog(@"%d\n", [ud objectForKey:MonochromeKey]);
 
 	cursorStyle=[[m_cursorStyle selectedCell] tag];
 	[ud setInteger: cursorStyle
@@ -252,6 +264,7 @@ static int scrollBackLines;
 
 	[b_useMultiCellGlyphs setState: useMultiCellGlyphs];
 	[b_blackOnWhite setState: blackOnWhite];
+	[b_monochrome setState: monochrome];
 
 	[m_cursorStyle selectCellWithTag: [[self class] cursorStyle]];
 	[w_cursorColor setColor: [[self class] cursorColor]];
@@ -406,6 +419,12 @@ static int scrollBackLines;
 			[top addView: butt enablingYResizing: NO];
 			DESTROY(butt);
 
+			butt=b_monochrome=[[NSButton alloc] init];
+			[butt setTitle: _(@"Monochrome")];
+			[butt setButtonType: NSSwitchButton];
+			[butt sizeToFit];
+			[top addView: butt enablingYResizing: NO];
+			DESTROY(butt);
 
 			hb=[[GSHbox alloc] init];
 			[hb setDefaultMinXMargin: 4];
