@@ -1,0 +1,9 @@
+*.a
+*.app
+*.bundle
+*.framework
+*.o
+derived_src
+obj
+/libs/PDFKit
+
