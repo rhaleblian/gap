@@ -391,56 +391,51 @@ TerminalScreen protocol implementation and rendering methods
 
 static int total_draw=0;
 
+static const float col_default_h[8]={0.00,0.66,0.33,0.50,0.00,0.83,0.17,0.00};
+static const float col_default_s[8]={ 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0};
+static const float col_default_b[8]={ 0.0, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8};
 
-static const float col_default_h[8]={  0,240,120,180,  0,300, 60,  0};
-static const float col_default_s[8]={0.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0};
-static const float col_default_b[8]={0.0,0.8,0.8,0.8,0.8,0.8,0.8,0.8};
-static const float col_inverse_h[8]={  0,240,120,180,  0,300, 60,  0};
-static const float col_inverse_s[8]={0.0,0.8,0.8,0.8,0.8,0.8,0.8,0.0};
-static const float col_inverse_b[8]={1.0,0.3,0.3,0.3,0.3,0.3,0.3,0.2};
-static const float col_monochr_s[8]={0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-const float *col_h = col_default_h;
-const float *col_s = col_default_s;
-const float *col_b = col_default_b;
+static const float col_inverse_h[8]={0.00,0.66,0.33,0.50,0.00,0.83,0.17,0.00};
+static const float col_inverse_s[8]={ 0.0, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.0};
+static const float col_inverse_b[8]={ 1.0, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.0};
+
+static const float col_monochr_s[8]={ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+
+const float *col_h;
+const float *col_s;
+const float *col_b;
+
 
 static void set_background(NSGraphicsContext *gc,
 	unsigned char color,unsigned char in)
 {
-	float bh,bs,bb=0.75;
-
 	int bg=color>>4;
 	if (bg>=8)
 		bg-=8;
-
-	bh=col_h[bg]/360.0;
-	bs=col_s[bg];
-
-	DPSsethsbcolor(gc,bh,bs,bb);
+	
+	DPSsethsbcolor(gc,col_h[bg],col_s[bg],col_b[bg]);
 }
 
 static void set_foreground(NSGraphicsContext *gc,
 	unsigned char color, unsigned char in, BOOL blackOnWhite)
 {
-	//NSLog(@"in=%d", in);
-
 	float h,s,b;
 	int fg=color;
+	float b_in[] = {0.4, 0.2, 0.0};
 
 	// Hue
 
-	h=col_h[fg]/360.0;
+	h=col_h[fg];
 
 	// Saturation
 
-	s=col_s[fg];
-	//if(in==2)
-	//	s*=0.75;
+	s=col_s[fg]-0.125*in;
 
 	// Brightness
 
 	b=col_b[fg];
-	if(fg)
-		b*=0.5*in+0.5;
+	if(!blackOnWhite)
+		b-=b_in[in];
 
 	DPSsethsbcolor(gc,h,s,b);
 }
