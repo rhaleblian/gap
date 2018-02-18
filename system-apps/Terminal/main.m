@@ -163,18 +163,6 @@
 	[menu setSubmenu: m forItem: [menu addItemWithTitle: _(@"Info")]];
 	[m release];
 
-	/* 'Terminal' menu */
-	m=[[NSMenu alloc] init];
-	[m addItemWithTitle: _(@"New window")
-		action: @selector(openWindow:)
-              keyEquivalent: @"n"];
-	[m addItemWithTitle: _(@"New tab")
-		action: @selector(openTab:)
-		keyEquivalent: @"t"];
-        [menu setSubmenu: m forItem: [menu addItemWithTitle: _(@"Shell")]];
-	[m release];
-
-
 	/* 'Edit' menu */
 	m=[[NSMenu alloc] init];
 	[m addItemWithTitle: _(@"Cut")
@@ -191,20 +179,21 @@
 
 	/* 'View' menu */
 	m=[[NSMenu alloc] init];
-	[m addItemWithTitle: _(@"Show tab bar")
+	[m addItemWithTitle: _(@"Toggle tab bar")
 		action: @selector(showTabBarToggle:)
 		keyEquivalent: @"T"];
 	[menu setSubmenu: m forItem: [menu addItemWithTitle: _(@"View")]];
 	[m release];
 
 	/* 'Windows' menu */
-	m=[[NSMenu alloc] init];
-	[m addItemWithTitle: _(@"Close window")
-		action: @selector(performClose:)
-		keyEquivalent: @"W"];
-	[m addItemWithTitle: _(@"Close tab")
-		action: @selector(closeTab:)
-		keyEquivalent: @"w"];
+	m=[[NSMenu alloc] init];	
+
+	[m addItemWithTitle: _(@"New window")
+		action: @selector(openWindow:)
+              keyEquivalent: @"n"];
+	[m addItemWithTitle: _(@"New tab")
+		action: @selector(openTab:)
+		keyEquivalent: @"t"];
 	[m addItemWithTitle: _(@"Show previous tab")
 		action: @selector(showPreviousTab:)
 		keyEquivalent: @"{"];
@@ -220,6 +209,12 @@
 	[m addItemWithTitle: _(@"Miniaturize all")
 		action: @selector(miniaturizeAll:)
 		keyEquivalent: @"m"];
+	[m addItemWithTitle: _(@"Close window")
+		action: @selector(performClose:)
+		keyEquivalent: @"W"];
+	[m addItemWithTitle: _(@"Close tab")
+		action: @selector(closeTab:)
+		keyEquivalent: @"w"];
 	[menu setSubmenu: m forItem: [menu addItemWithTitle: _(@"Windows")]];
 	[NSApp setWindowsMenu: m];
 	[m release];
