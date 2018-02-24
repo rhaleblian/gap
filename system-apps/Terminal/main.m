@@ -179,6 +179,28 @@
 
 	/* 'View' menu */
 	m=[[NSMenu alloc] init];
+	[m addItemWithTitle: _(@"New tab")
+		action: @selector(openTab:)
+		keyEquivalent: @"t"];
+
+	[m addItemWithTitle: _(@"Show previous tab")
+		action: @selector(showPreviousTab:)
+		keyEquivalent: @"{"];
+	[m addItemWithTitle: _(@"Show next tab")
+		action: @selector(showNextTab:)
+		keyEquivalent: @"}"];
+
+	[m addItemWithTitle: _(@"Move tab left")
+		action: @selector(moveTabLeft:)
+		keyEquivalent: @"("];
+	[m addItemWithTitle: _(@"Move tab right")
+		action: @selector(moveTabRight:)
+		keyEquivalent: @")"];
+
+	[m addItemWithTitle: _(@"Close tab")
+		action: @selector(closeTab:)
+		keyEquivalent: @"w"];
+
 	[m addItemWithTitle: _(@"Toggle tab bar")
 		action: @selector(showTabBarToggle:)
 		keyEquivalent: @"T"];
@@ -191,24 +213,6 @@
 	[m addItemWithTitle: _(@"New window")
 		action: @selector(openWindow:)
               keyEquivalent: @"n"];
-	[m addItemWithTitle: _(@"New tab")
-		action: @selector(openTab:)
-		keyEquivalent: @"t"];
-	[m addItemWithTitle: _(@"Show previous tab")
-		action: @selector(showPreviousTab:)
-		keyEquivalent: @"{"];
-	[m addItemWithTitle: _(@"Show next tab")
-		action: @selector(showNextTab:)
-		keyEquivalent: @"}"];
-	[m addItemWithTitle: _(@"Move tab left")
-		action: @selector(moveTabLeft:)
-		keyEquivalent: @"("];
-	[m addItemWithTitle: _(@"Move tab right")
-		action: @selector(moveTabRight:)
-		keyEquivalent: @")"];
-	[m addItemWithTitle: _(@"Close tab")
-		action: @selector(closeTab:)
-		keyEquivalent: @"w"];
 	[m addItemWithTitle: _(@"Close window")
 		action: @selector(performClose:)
 		keyEquivalent: @"W"];
