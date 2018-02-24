@@ -206,15 +206,15 @@
 	[m addItemWithTitle: _(@"Move tab right")
 		action: @selector(moveTabRight:)
 		keyEquivalent: @")"];
-	[m addItemWithTitle: _(@"Miniaturize all")
-		action: @selector(miniaturizeAll:)
-		keyEquivalent: @"m"];
-	[m addItemWithTitle: _(@"Close window")
-		action: @selector(performClose:)
-		keyEquivalent: @"W"];
 	[m addItemWithTitle: _(@"Close tab")
 		action: @selector(closeTab:)
 		keyEquivalent: @"w"];
+	[m addItemWithTitle: _(@"Close window")
+		action: @selector(performClose:)
+		keyEquivalent: @"W"];
+	[m addItemWithTitle: _(@"Miniaturize all")
+		action: @selector(miniaturizeAll:)
+		keyEquivalent: @"m"];
 	[menu setSubmenu: m forItem: [menu addItemWithTitle: _(@"Windows")]];
 	[NSApp setWindowsMenu: m];
 	[m release];
